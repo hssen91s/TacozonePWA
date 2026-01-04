@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Tacozone POS (PWA)</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#1A1A1A">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <div>
+        <div class="title">TAC OZONE</div>
+        <div class="subtitle">POS • KDS • Dashboard (Demo)</div>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-view="pos">POS</button>
+      <button class="tab" data-view="kds">KDS</button>
+      <button class="tab" data-view="dash">Dashboard</button>
+      <button class="tab" data-view="settings">Settings</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="view-pos" class="view active">
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>الأصناف</h2>
+            <div class="pill">Touch Friendly</div>
+          </div>
+          <div id="catRow" class="cat-row"></div>
+
+          <div class="panel-header" style="margin-top:12px;">
+            <h2>المنتجات</h2>
+            <div class="search">
+              <input id="search" placeholder="بحث..." />
+            </div>
+          </div>
+          <div id="prodGrid" class="prod-grid"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>سلة الطلب</h2>
+            <div class="pill">DINE-IN / TAKEAWAY / DELIVERY</div>
+          </div>
+
+          <div class="order-meta">
+            <select id="orderType">
+              <option value="DINEIN">داخل المطعم (DINE-IN)</option>
+              <option value="TAKEAWAY">تيك أواي (TAKEAWAY)</option>
+              <option value="DELIVERY">دليفري (DELIVERY)</option>
+            </select>
+            <input id="orderNote" placeholder="ملاحظة (بدون بصل…)" />
+            <div class="discount">
+              <label>خصم %</label>
+              <input id="discount" type="number" min="0" max="100" value="0"/>
+            </div>
+          </div>
+
+          <div id="cart" class="cart"></div>
+
+          <div class="totals">
+            <div>المجموع</div><div id="subTotal">0.00</div>
+            <div>خصم</div><div id="discValue">0.00</div>
+            <div class="grand">الإجمالي</div><div class="grand" id="grandTotal">0.00</div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-red" id="btnClear">إلغاء / مسح</button>
+            <button class="btn btn-dark" id="btnHold">حفظ مفتوح</button>
+            <button class="btn btn-yellow" id="btnCash">دفع نقدًا</button>
+            <button class="btn btn-yellow" id="btnCard">دفع بطاقة</button>
+          </div>
+
+          <div class="hint">
+            ⚠️ هذه نسخة iPhone Demo (بدون ربط PC الآن). عند ربط الكمبيوتر لاحقًا تتحول لنسخة حقيقية 100%.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-kds" class="view">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Kitchen Display (KDS)</h2>
+          <div class="pill">NEW → IN PROGRESS → READY</div>
+        </div>
+        <div class="kds-toolbar">
+          <button class="btn btn-dark" id="btnSeed">إنشاء طلب تجريبي</button>
+          <button class="btn btn-yellow" id="btnSound">صوت تنبيه: تشغيل</button>
+        </div>
+        <div id="kdsBoard" class="kds-board"></div>
+      </div>
+    </section>
+
+    <section id="view-dash" class="view">
+      <div class="grid3">
+        <div class="card card-yellow">
+          <div class="card-title">مبيعات اليوم</div>
+          <div class="card-val" id="dSales">0.00</div>
+        </div>
+        <div class="card card-green">
+          <div class="card-title">عدد الطلبات</div>
+          <div class="card-val" id="dOrders">0</div>
+        </div>
+        <div class="card card-red">
+          <div class="card-title">Low Stock</div>
+          <div class="card-val" id="dLow">0</div>
+        </div>
+      </div>
+
+      <div class="grid2" style="margin-top:14px;">
+        <div class="panel">
+          <div class="panel-header"><h2>Top Items</h2></div>
+          <div id="topItems" class="table"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>آخر الطلبات</h2></div>
+          <div id="lastOrders" class="table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-settings" class="view">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Settings</h2>
+          <div class="pill">Tacozone Dark</div>
+        </div>
+
+        <div class="settings">
+          <label>اسم الفرع</label>
+          <input id="branchName" placeholder="Tacozone - Main" />
+          <label>Strict Stock</label>
+          <select id="strictStock">
+            <option value="1">ON (منع البيع إذا المخزون غير كاف)</option>
+            <option value="0">OFF (يسمح بالبيع ويصفر المخزون)</option>
+          </select>
+
+          <label>ملاحظة</label>
+          <div class="hint">
+            هذه نسخة Demo تعمل على iPhone وحده. لاحقًا نربطها مع الكمبيوتر (POS) عبر Wi‑Fi ليصبح النظام حقيقي 100%.
+          </div>
+
+          <button class="btn btn-green" id="btnSaveSettings">حفظ</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">Tacozone • PWA Demo • Offline Ready</footer>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>
